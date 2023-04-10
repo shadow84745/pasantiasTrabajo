@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="es">
+  <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src="https://cdn.jsdelivr.net/npm/interactjs/dist/interact.min.js"></script>
+    <title>Canva De ejemplo</title>
+    <style>
+      #myCanvas {
+        border: 1px solid red;
+        background-color: antiquewhite;
+      }
+
+      #bloque-1 {
+        display: inline-block;
+        justify-content: center;
+        align-items: center;
+      }
+
+      #bloque-1 canvas {
+        border: 1px solid black;
+        background-color: cadetblue;
+        display: block;
+      }
+
+      .draggable-text-field {
+        position: absolute;
+        background-color: white;
+        border: 1px solid #ccc;
+        padding: 5px;
+        cursor: move;
+      }
+    </style>
+  </head>
+  <body>
+    <center><h1>MY INTERFACE</h1></center>
+    <center>
+      <div>
+        <canvas id="myCanvas" width="1000" height="900"></canvas>
+        <div id="bloque-1">
+          <canvas id="selector-entidades" height="299"></canvas>
+          <canvas id="selector-atributos" height="299"></canvas>
+          <canvas id="selector-metodos" height="298"></canvas>
+        </div>
+      </div>
+    </center>
+
+    <script>
+      // Función para crear un campo de texto arrastrable
+      const createDraggableTextField = () => {
+        const textField = document.createElement("input");
+        textField.classList.add("draggable-text-field");
+        textField.type = "text";
+
+        let isDragging = false;
+        let prevX = 0;
+        let prevY = 0;
+
+        textField.addEventListener("mousedown", (event) => {
+          isDragging = true;
+          prevX = event.clientX;
+          prevY = event.clientY;
+        });
+
+        textField.addEventListener("mouseup", () => {
+          isDragging = false;
+        });
+
+        textField.addEventListener("mousemove", (event) => {
+          if (isDragging) {
+            const dx = event.clientX - prevX;
+            const dy = event.clientY - prevY;
+            const left = parseInt(textField.style.left || 0);
+            const top = parseInt(textField.style.top || 0);
+            textField.style.left = `${left + dx}px`;
+            textField.style.top = `${top + dy}px`;
+            prevX = event.clientX;
+            prevY = event.clientY;
+          }
+        });
+
+        return textField;
+      };
+
+      // Agrega campos de texto arrastrables a los canvas dentro del div "bloque-1"
+    const addDraggableTextFields = () => {
+    const canvasList = document.querySelectorAll("#bloque-1 canvas");
+    const mainCanvas = document.querySelector("#myCanvas");
+    const mainCanvasRect = mainCanvas.getBoundingClientRect();
+
+  canvasList.forEach((canvas) => {
+    const container = canvas.parentNode;
+    container.style.position = "relative";
+
+    const textField = createDraggableTextField();
+    container.appendChild(textField);
+
+    textField.style.top = `${canvas.offsetTop + 10}px`;
+    textField.style.left = `${canvas.offsetLeft + 10}px`;
+
+    textField.addEventListener("mouseup", (event) => {
+      if (textField.offsetLeft < mainCanvasRect.left ||
+          textField.offsetTop < mainCanvasRect.top ||
+          textField.offsetLeft + textField.clientWidth > mainCanvasRect.right ||
+          textField.offsetTop + textField.clientHeight > mainCanvasRect.bottom) {
+        // El campo de texto se soltó fuera del canvas principal, moverlo de vuelta a su posición inicial
+        textField.style.top = `${canvas.offsetTop + 10}px`;
+        textField.style.left = `${canvas.offsetLeft + 10}px`;
+      }
+    });
+  });
+};
+
+
+      // Agrega los campos de texto arrastrables cuando el documento se ha cargado
+      document.addEventListener("DOMContentLoaded", () => {
+        addDraggableTextFields();
+      });
+
+      
+    </script>
+  </body>
+</html>

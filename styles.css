@@ -1,0 +1,22 @@
+#myCanvas {
+    border: 1px solid red;
+    background-color: antiquewhite;
+}
+#bloque-1{
+    display: inline-block;
+}
+#selector-entidades {
+    border: 1px solid black;
+    background-color: cadetblue;
+    display: block;
+}
+#selector-atributos {
+    border: 1px solid black;
+    background-color: cadetblue;
+    display: block;
+}
+#selector-metodos {
+    border: 1px solid black;
+    background-color: cadetblue;
+    display: block;
+}
